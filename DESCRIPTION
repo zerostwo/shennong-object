@@ -1,0 +1,48 @@
+Package: ShennongObject
+Type: Package
+Title: Modern Data Structures for Multi-Omics Analysis
+Version: 0.1.0
+Authors@R: c(
+    person("Songqi", "Duan", , "duan@songqi.org", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-0822-5883"))
+  )
+Description: 
+  Provides a tidy, extensible, and modular S4 data infrastructure for organizing
+  and analyzing multi-omics and single-cell datasets in R. The ShennongObject 
+  class extends MultiAssayExperiment to support streamlined integration of assays, 
+  flexible metadata management, dimensionality reductions, visualization tools, 
+  and analysis provenance tracking. Designed for compatibility with tidyverse-style 
+  workflows and modern bioinformatics pipelines.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    S4Vectors,
+    MultiAssayExperiment,
+    SummarizedExperiment,
+    rlang,
+    dplyr,
+    ggplot2,
+    glue,
+    Matrix,
+    methods,
+    tibble,
+    stats
+RoxygenNote: 7.3.2
+Collate: 
+    'zzz.R'
+    'AllClasses.R'
+    'ShennongObject-package.R'
+    'constructor.R'
+    'data.R'
+    'generics.R'
+    'methods-command.R'
+    'methods-dplyr.R'
+    'methods-ggplot2.R'
+    'methods-reduction.R'
+    'methods-shennong.R'
+    'methods-tools.R'
+    'show-method.R'
+    'utils.R'
+Depends: 
+    R (>= 3.5)
