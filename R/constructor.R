@@ -305,19 +305,19 @@ sn_create_reduction <- function(
   stopifnot(is.matrix(embedding))
 
   if (is.null(key)) {
-    if (!is.null(colnames(embedding))) {
-      key_guess <- regmatches(
-        x = colnames(embedding),
-        m = regexpr("^[[:alnum:]]+", colnames(embedding))
-      )
-      key_guess <- unique(key_guess[nzchar(key_guess)])
-      if (length(key_guess) == 1) {
-        key <- paste0(key_guess, "_")
+    # Infer common prefix from colnames
+    if (is.null(key)) {
+      if (!is.null(colnames(embedding))) {
+        key_prefixes <- gsub("[0-9]+$", "", colnames(embedding))
+        key_prefixes <- unique(key_prefixes[nzchar(key_prefixes)])
+        if (length(key_prefixes) == 1) {
+          key <- paste0(key_prefixes, "_")
+        } else {
+          abort("Cannot infer `key` from column names. Please provide explicitly.")
+        }
       } else {
-        abort("Cannot infer `key` from column names. Please provide explicitly.")
+        abort("`key` must be provided when `colnames(embedding)` are NULL.")
       }
-    } else {
-      abort("`key` must be provided when `colnames(embedding)` are NULL.")
     }
   } else {
     if (!grepl("_$", key)) {

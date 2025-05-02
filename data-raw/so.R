@@ -21,6 +21,8 @@ so <- sn_create_shennong_object(counts = rna_counts, assay = "RNA", project = "E
 sn_layer_data(so, layer = "data", assay = "RNA") <- rna_data
 sn_layer_data(so, layer = "scale.data", assay = "RNA") <- rna_scale
 
+sn_active_layer(so) <- "data"
+
 # --- Add ATAC assay ---
 so <- sn_add_assay(so, data = atac_counts, assay = "ATAC")
 
