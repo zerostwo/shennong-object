@@ -1,30 +1,61 @@
 # data-raw/so.R
+# Generate a compact Shennong demo object with multiple assays, layers, reductions, and metadata
 
 library(ShennongObject)
+set.seed(717)
 
-counts <- matrix(
-  rpois(200, lambda = 10),
-  nrow = 20,
-  dimnames = list(paste0("gene", 1:20), paste0("sample", 1:10))
-)
+# Define gene and sample names
+genes <- paste0("gene", 1:200)
+samples <- paste0("sample", 1:20)
 
-so <- sn_create_shennong_object(counts = counts, assay = "RNA", project = "demo")
+# --- Construct RNA assay ---
+rna_counts <- matrix(rpois(4000, lambda = 10), nrow = 200, dimnames = list(genes, samples))
+rna_data <- log1p(rna_counts)
+rna_scale <- scale(rna_data)
 
-sn_layer_data(so, layer = "data") <- log1p(counts)[rev(rownames(counts)), ]
-sn_layer_data(so, layer = "scale.data") <- scale(log1p(counts))
+# --- Construct ATAC assay ---
+atac_counts <- matrix(rpois(4000, lambda = 5), nrow = 200, dimnames = list(genes, samples))
 
-atac_counts <- matrix(
-  rbinom(200, size = 1, prob = 0.2),
-  nrow = 20,
-  dimnames = list(paste0("peak", 1:20), paste0("sample", 1:10))
-)
+# --- Create Shennong object with RNA assay and layers ---
+so <- sn_create_shennong_object(counts = rna_counts, assay = "RNA", project = "ExampleProject")
+sn_layer_data(so, layer = "data", assay = "RNA") <- rna_data
+sn_layer_data(so, layer = "scale.data", assay = "RNA") <- rna_scale
+
+# --- Add ATAC assay ---
 so <- sn_add_assay(so, data = atac_counts, assay = "ATAC")
-sn_active_assay(so) <- "RNA"
 
-sn_active_layer(so) <- "data"
+# --- Add sample-level metadata ---
+meta <- data.frame(
+  condition = rep(c("Normal", "Tumor"), each = 10),
+  gender = rep(c("Male", "Female"), 10),
+  age = round(runif(20, 40, 70)),
+  row.names = samples
+)
+so <- sn_add_metadata(so, meta)
 
-sn_active_ident(so) <- factor(rep(c("Tumor", "Normal"), each = 5))
+# --- Run PCA on scaled RNA data ---
+pca_res <- prcomp(t(rna_scale), center = TRUE, scale. = FALSE)
+pca_embed <- pca_res$x
+pca_loadings <- pca_res$rotation
+pca_stdev <- pca_res$sdev
 
-so <- sn_add_metadata(so, metadata = rep(c("M", "F"), 5), col_name = "sex")
+so[["pca"]] <- sn_create_reduction(
+  embedding = pca_embed,
+  loadings = pca_loadings,
+  stdev = pca_stdev,
+  assay_used = "RNA",
+  key = "PC"
+)
 
+# --- Run MDS on scaled RNA data ---
+dist_mat <- dist(t(rna_scale))
+mds_embed <- cmdscale(dist_mat, k = 2)
+
+so[["mds"]] <- sn_create_reduction(
+  embedding = mds_embed,
+  assay_used = "RNA",
+  key = "MDS"
+)
+
+# --- Save to package ---
 usethis::use_data(so, overwrite = TRUE)

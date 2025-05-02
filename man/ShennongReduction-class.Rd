@@ -3,13 +3,12 @@
 \docType{class}
 \name{ShennongReduction-class}
 \alias{ShennongReduction-class}
-\alias{ShennongReduction}
 \title{The ShennongReduction Class}
 \description{
 Stores dimensionality reduction results (e.g., PCA, UMAP, tSNE) for a
-\code{Shennong} object. This class is inspired by Seurat's \code{DimReduc},
-and includes embedding coordinates, optional feature loadings, standard
-deviations, and user-defined metadata.
+\code{Shennong} object. Inspired by Seurat's \code{DimReduc} structure,
+this class contains embeddings, optional feature loadings, standard deviations,
+a naming key, and metadata.
 }
 \section{Slots}{
 
@@ -20,11 +19,11 @@ deviations, and user-defined metadata.
 
 \item{\code{stdev}}{A numeric vector of standard deviations of each dimension.}
 
-\item{\code{method}}{A character string indicating the reduction method (e.g., "PCA", "UMAP").}
-
 \item{\code{assay_used}}{The name of the assay this reduction was computed from.}
 
 \item{\code{global}}{Logical. If TRUE, persists across assay removal.}
+
+\item{\code{key}}{A character prefix (e.g., "PC") prepended to column names of embedding matrix.}
 
 \item{\code{misc}}{A list of additional information.}
 }}

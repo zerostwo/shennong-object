@@ -326,9 +326,9 @@ setMethod("sn_layer_data<-", "Shennong", function(object,
 
 #' @rdname sn_metadata
 setMethod("sn_metadata", "Shennong", function(object, cols = NULL, drop = FALSE, ...) {
-  cd <- colData(object) |>
-    as.data.frame() |>
-    tibble::rownames_to_column("sample_id") |>
+  cd <- colData(object) %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column("sample_id") %>%
     tibble::as_tibble()
   if (is.null(cols)) {
     return(cd)
@@ -341,7 +341,6 @@ setMethod("sn_metadata", "Shennong", function(object, cols = NULL, drop = FALSE,
     return(selected_cd)
   }
 })
-
 
 #' @rdname sn_add_metadata
 #' @export
@@ -421,6 +420,48 @@ setMethod("sn_add_metadata", "Shennong", function(object, metadata, col_name = N
 #' @export
 setMethod("sn_version", "Shennong", function(object, ...) {
   return(slot(object = object, name = "version"))
+})
+
+#' @rdname sn_embeddings
+#' @export
+setMethod("sn_embeddings", signature("Shennong"), function(object, reduction = NULL) {
+  if (is.null(reduction)) {
+    reduction <- sn_active_reduction(object)
+    if (is.na(reduction)) {
+      abort("No active reduction found. Please specify `reduction` explicitly.")
+    }
+  }
+
+  red_obj <- object[[reduction]]
+  sn_embeddings(red_obj)
+})
+
+#' @rdname sn_loadings
+#' @export
+setMethod("sn_loadings", signature("Shennong"), function(object, reduction = NULL) {
+  if (is.null(reduction)) {
+    reduction <- sn_active_reduction(object)
+    if (is.na(reduction)) {
+      abort("No active reduction found. Please specify `reduction` explicitly.")
+    }
+  }
+
+  red_obj <- object[[reduction]]
+  sn_loadings(red_obj)
+})
+
+#' @rdname sn_stdev
+#' @export
+setMethod("sn_stdev", signature("Shennong"), function(object, reduction = NULL) {
+  if (is.null(reduction)) {
+    reduction <- sn_active_reduction(object)
+    if (is.na(reduction)) {
+      abort("No active reduction found. Please specify `reduction` explicitly.")
+    }
+  }
+
+  red_obj <- object[[reduction]]
+  sn_stdev(red_obj)
 })
 
 # Methods for R-defined generics ------------------------------------------
@@ -515,6 +556,7 @@ setMethod("tail", "Shennong", function(x, n = 6L, ...) {
 })
 
 #' @rdname sn_fetch_data
+#' @export
 setMethod("sn_fetch_data", "Shennong", function(object, vars, samples = NULL, layer = NULL, clean = TRUE, ...) {
   all_samples <- colnames(object)
   samples <- samples %||% all_samples
@@ -539,16 +581,29 @@ setMethod("sn_fetch_data", "Shennong", function(object, vars, samples = NULL, la
     df$ident <- sn_active_ident(object)[samples]
   }
 
-  # Try from active assay
+  # Try from active assay layer
   expr_vars <- setdiff(vars, c(meta_vars, "ident"))
   if (length(expr_vars)) {
     assay <- sn_active_assay(object)
-    # assay_mat <- assays(object)[[assay_name]]
     assay_mat <- sn_layer_data(object, layer = layer, assay = assay)
-    found_vars <- intersect(expr_vars, rownames(assay_mat))
-    if (length(found_vars)) {
-      expr_data <- t(assay_mat[found_vars, samples, drop = FALSE])
-      df[found_vars] <- expr_data
+    found_expr_vars <- intersect(expr_vars, rownames(assay_mat))
+    if (length(found_expr_vars)) {
+      expr_data <- t(assay_mat[found_expr_vars, samples, drop = FALSE])
+      df[found_expr_vars] <- expr_data
+    }
+  }
+
+  # Try from reductions (active or all)
+  red_vars <- setdiff(expr_vars, rownames(df))
+  if (length(red_vars)) {
+    red_list <- sn_reductions(object)
+    for (red_name in red_list) {
+      embedding <- sn_embeddings(object, reduction = red_name)
+      found_red_vars <- intersect(red_vars, colnames(embedding))
+      if (length(found_red_vars)) {
+        df[found_red_vars] <- embedding[samples, found_red_vars, drop = FALSE]
+        red_vars <- setdiff(red_vars, found_red_vars)
+      }
     }
   }
 

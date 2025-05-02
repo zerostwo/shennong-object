@@ -279,3 +279,69 @@ sn_log_shennong_command <- function(object, return_command = FALSE) {
   object@commands[[command_name]] <- shen_cmd
   return(object)
 }
+
+
+# Reduction ---------------------------------------------------------------
+#' Create a dimensional reduction object for Shennong
+#'
+#' @param embedding A matrix of sample coordinates in reduced space.
+#' @param loadings Optional matrix of feature loadings.
+#' @param stdev Optional numeric vector of standard deviations.
+#' @param assay_used Assay name from which the reduction is derived.
+#' @param key Character prefix used in column names of the embedding matrix.
+#' @param global Logical. If TRUE, this reduction persists even if the assay is dropped.
+#' @param misc List of additional metadata.
+#'
+#' @return A `ShennongReduction` object.
+#' @export
+sn_create_reduction <- function(
+    embedding,
+    loadings = matrix(0, nrow = 0, ncol = 0),
+    stdev = numeric(),
+    assay_used = NULL,
+    key = NULL,
+    global = FALSE,
+    misc = list()) {
+  stopifnot(is.matrix(embedding))
+
+  if (is.null(key)) {
+    if (!is.null(colnames(embedding))) {
+      key_guess <- regmatches(
+        x = colnames(embedding),
+        m = regexpr("^[[:alnum:]]+", colnames(embedding))
+      )
+      key_guess <- unique(key_guess[nzchar(key_guess)])
+      if (length(key_guess) == 1) {
+        key <- paste0(key_guess, "_")
+      } else {
+        abort("Cannot infer `key` from column names. Please provide explicitly.")
+      }
+    } else {
+      abort("`key` must be provided when `colnames(embedding)` are NULL.")
+    }
+  } else {
+    if (!grepl("_$", key)) {
+      key <- paste0(key, "_")
+    }
+  }
+
+  if (is.null(colnames(embedding)) ||
+    !all(grepl(paste0("^", key, "[[:digit:]]+$"), colnames(embedding)))) {
+    colnames(embedding) <- paste0(key, seq_len(ncol(embedding)))
+  }
+
+  if (ncol(loadings) > 0 && !all(colnames(loadings) == colnames(embedding))) {
+    colnames(loadings) <- colnames(embedding)
+  }
+
+  new(
+    Class = "ShennongReduction",
+    embedding = embedding,
+    loadings = loadings,
+    stdev = stdev,
+    assay_used = assay_used %||% "RNA",
+    global = global,
+    key = key,
+    misc = misc
+  )
+}

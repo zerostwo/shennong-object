@@ -58,3 +58,28 @@ setMethod(
     }
   }
 )
+
+##' Show method for ShennongReduction
+#'
+#' @param object A ShennongReduction object.
+#' @export
+setMethod("show", "ShennongReduction", function(object) {
+  n_samples <- nrow(object@embedding)
+  n_dims <- ncol(object@embedding)
+  key <- object@key
+  assay <- object@assay_used
+  has_loadings <- if (ncol(object@loadings) > 0) "present" else "absent"
+  stdev_len <- length(object@stdev)
+  is_global <- object@global
+  misc_len <- length(object@misc)
+
+  cat(glue::glue(
+    "A ShennongReduction\n",
+    "Assay used: {assay}\n",
+    "Dimensions: {n_samples} samples x {n_dims} components (key = '{key}')\n",
+    "Loadings: {has_loadings}\n",
+    "Standard deviation: {stdev_len} dimension{ifelse(stdev_len == 1, '', 's')}\n",
+    "Global: {is_global}\n",
+    "Metadata: {misc_len} item{ifelse(misc_len == 1, '', 's')} in `misc`\n"
+  ))
+})

@@ -75,29 +75,28 @@ setClass(
 #' The ShennongReduction Class
 #'
 #' Stores dimensionality reduction results (e.g., PCA, UMAP, tSNE) for a
-#' \code{Shennong} object. This class is inspired by Seurat's \code{DimReduc},
-#' and includes embedding coordinates, optional feature loadings, standard
-#' deviations, and user-defined metadata.
+#' \code{Shennong} object. Inspired by Seurat's \code{DimReduc} structure,
+#' this class contains embeddings, optional feature loadings, standard deviations,
+#' a naming key, and metadata.
 #'
 #' @slot embedding A matrix of sample (cell) coordinates in reduced space.
 #' @slot loadings A matrix of feature loadings (optional).
 #' @slot stdev A numeric vector of standard deviations of each dimension.
-#' @slot method A character string indicating the reduction method (e.g., "PCA", "UMAP").
 #' @slot assay_used The name of the assay this reduction was computed from.
 #' @slot global Logical. If TRUE, persists across assay removal.
+#' @slot key A character prefix (e.g., "PC") prepended to column names of embedding matrix.
 #' @slot misc A list of additional information.
 #'
 #' @exportClass ShennongReduction
-#' @aliases ShennongReduction
 setClass(
   Class = "ShennongReduction",
   slots = c(
     embedding = "matrix",
     loadings = "matrix",
     stdev = "numeric",
-    method = "character",
     assay_used = "character",
     global = "logical",
+    key = "character",
     misc = "list"
   )
 )

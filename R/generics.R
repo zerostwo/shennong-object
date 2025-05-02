@@ -241,20 +241,26 @@ setGeneric("sn_commands<-", function(object, command, ..., value) standardGeneri
 # Generics for Reduction-class --------------------------------------------
 #' Get Dimensional Reductions
 #' @param object A Shennong object or other class.
-#' @param reduction Optional: Specific reduction name.
 #' @param ... Additional arguments.
 #' @rdname sn_reductions
 #' @export
-setGeneric("sn_reductions", function(object, reduction = NULL, ...) standardGeneric("sn_reductions"))
+setGeneric("sn_reductions", function(object, ...) standardGeneric("sn_reductions"))
 
-#' Set Dimensional Reduction<-
+#' Get the active reduction name for a given assay
 #' @param object A Shennong object.
-#' @param reduction Name for the reduction.
-#' @param ... Additional arguments.
-#' @param value The reduction data (list).
-#' @rdname sn_reductions
+#' @param assay Character name of the assay (optional).
+#' @return A character string.
+#' @rdname sn_active_reduction
 #' @export
-setGeneric("sn_reductions<-", function(object, reduction, ..., value) standardGeneric("sn_reductions<-"))
+setGeneric("sn_active_reduction", function(object, assay = NULL) standardGeneric("sn_active_reduction"))
+
+#' Set the active reduction for an assay
+#' @param object A Shennong object.
+#' @param value Name of the reduction to set as active.
+#' @return The updated Shennong object.
+#' @rdname sn_active_reduction
+#' @export
+setGeneric("sn_active_reduction<-", function(object, value) standardGeneric("sn_active_reduction<-"))
 
 #' Get Embeddings
 #' @param object A Shennong object or other class.
@@ -262,7 +268,7 @@ setGeneric("sn_reductions<-", function(object, reduction, ..., value) standardGe
 #' @param ... Additional arguments.
 #' @rdname sn_embeddings
 #' @export
-setGeneric("sn_embeddings", function(object, reduction, ...) standardGeneric("sn_embeddings"))
+setGeneric("sn_embeddings", function(object, reduction = NULL, ...) standardGeneric("sn_embeddings"))
 
 #' Get Feature Loadings
 #' @param object A Shennong object or other class.
@@ -270,7 +276,7 @@ setGeneric("sn_embeddings", function(object, reduction, ...) standardGeneric("sn
 #' @param ... Additional arguments.
 #' @rdname sn_loadings
 #' @export
-setGeneric("sn_loadings", function(object, reduction, ...) standardGeneric("sn_loadings"))
+setGeneric("sn_loadings", function(object, reduction = NULL, ...) standardGeneric("sn_loadings"))
 
 #' Get Standard Deviations
 #' @param object A Shennong object or other class.
@@ -278,7 +284,7 @@ setGeneric("sn_loadings", function(object, reduction, ...) standardGeneric("sn_l
 #' @param ... Additional arguments.
 #' @rdname sn_stdev
 #' @export
-setGeneric("sn_stdev", function(object, reduction, ...) standardGeneric("sn_stdev"))
+setGeneric("sn_stdev", function(object, reduction = NULL, ...) standardGeneric("sn_stdev"))
 
 # Generics for Tools-class ------------------------------------------------
 #' Get Tool Data
