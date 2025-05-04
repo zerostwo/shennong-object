@@ -2,6 +2,11 @@ url: ~
 template:
   bootstrap: 5
 
+navbar:
+  structure:
+    left:
+      - articles
+
 articles:
   - title: "Quick Start Guide"
     dropdown: true

@@ -18,6 +18,11 @@ data layers within assays (e.g., counts, normalized data, scaled data),
 dimensional reductions (e.g., PCA, UMAP), sample metadata, and analysis
 provenance.
 
+The design of `ShennongObject` was inspired by the structured API of the
+`Seurat` package for single-cell data, and draws conceptual influence
+from the `tidyomics` philosophy to support tidyverse-style workflows for
+omics analysis.
+
 ## Installation
 
 To install the development version from GitHub:

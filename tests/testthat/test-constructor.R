@@ -27,7 +27,7 @@ test_that("Shennong object constructor handles metadata correctly", {
 
 test_that("Filtering by min_counts and min_features works", {
   counts <- matrix(rpois(1000, lambda = 10), nrow = 100, ncol = 10)
-  counts[, 1:2] <- 0  # make first two samples bad
+  counts[, 1:2] <- 0 # make first two samples bad
   rownames(counts) <- paste0("gene", seq_len(nrow(counts)))
   colnames(counts) <- paste0("sample", seq_len(ncol(counts)))
 
@@ -39,13 +39,17 @@ test_that("Filtering by min_counts and min_features works", {
 test_that("Shennong constructor gives informative errors", {
   bad_counts <- matrix(rpois(1000, 10), 100, 10)
   # Missing colnames
-  expect_error(sn_initialize_shennong_object(counts = bad_counts[, -1]),
-               "Column names are required")
+  expect_error(
+    sn_initialize_shennong_object(counts = bad_counts[, -1]),
+    "Column names are required"
+  )
 
   bad_counts_dup <- bad_counts
   colnames(bad_counts_dup) <- rep("sample1", 10)
-  expect_error(sn_initialize_shennong_object(counts = bad_counts_dup),
-               "Duplicate sample names")
+  expect_error(
+    sn_initialize_shennong_object(counts = bad_counts_dup),
+    "Duplicate sample names"
+  )
 })
 
 test_that("sn_create_reduction returns valid ShennongReduction object", {

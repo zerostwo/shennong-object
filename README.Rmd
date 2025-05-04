@@ -26,6 +26,8 @@ set.seed(717) # for reproducibility
 
 The goal of `ShennongObject` is to provide an S4 class, `Shennong`, designed for storing and analyzing multi-modal single-cell and bulk omics data. It builds upon the `MultiAssayExperiment` framework, offering a structured way to manage multiple assays (e.g., RNA, ATAC), data layers within assays (e.g., counts, normalized data, scaled data), dimensional reductions (e.g., PCA, UMAP), sample metadata, and analysis provenance.
 
+The design of `ShennongObject` was inspired by the structured API of the `Seurat` package for single-cell data, and draws conceptual influence from the `tidyomics` philosophy to support tidyverse-style workflows for omics analysis.
+
 ## Installation
 
 To install the development version from GitHub:

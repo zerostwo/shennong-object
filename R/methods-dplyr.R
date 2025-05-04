@@ -36,11 +36,14 @@ filter.Shennong <- function(.data, ..., layer = NULL, .by = NULL, .preserve = FA
 
   # 2. Get expression matrix (active layer)
   active_layer <- layer %||% sn_active_layer(.data)
-  expr_before <- tryCatch({
-    mat <- sn_layer_data(.data, layer = active_layer)
-    df <- as_tibble(t(mat), rownames = "observation")
-    df
-  }, error = function(e) NULL)
+  expr_before <- tryCatch(
+    {
+      mat <- sn_layer_data(.data, layer = active_layer)
+      df <- as_tibble(t(mat), rownames = "observation")
+      df
+    },
+    error = function(e) NULL
+  )
 
   # 3. Get all reductions without prefixing column names
   reductions <- lapply(.data@reductions, function(red) {
@@ -79,9 +82,12 @@ filter.Shennong <- function(.data, ..., layer = NULL, .by = NULL, .preserve = FA
   })
 
   # 7. After filter, record for logging
-  expr_after <- tryCatch({
-    sn_layer_data(.data, layer = active_layer)
-  }, error = function(e) NULL)
+  expr_after <- tryCatch(
+    {
+      sn_layer_data(.data, layer = active_layer)
+    },
+    error = function(e) NULL
+  )
 
   n_samples_after <- length(kept_samples)
   n_features_after <- if (!is.null(expr_after)) nrow(expr_after) else NA

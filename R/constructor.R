@@ -293,7 +293,9 @@ sn_log_shennong_command <- function(object, return_command = FALSE, .info = list
     assay_used = cmd_assay
   )
 
-  if (isTRUE(return_command)) return(shen_cmd)
+  if (isTRUE(return_command)) {
+    return(shen_cmd)
+  }
 
   object@commands[[final_name]] <- shen_cmd
   return(object)

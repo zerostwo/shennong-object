@@ -37,7 +37,8 @@ metadata <- data.frame(
 so <- sn_initialize_shennong_object(
   counts = rna_counts,
   metadata = metadata,
-  assay = "RNA", project = "Shennong")
+  assay = "RNA", project = "Shennong"
+)
 
 # Add RNA layers
 sn_layer_data(so, layer = "data", assay = "RNA") <- rna_data

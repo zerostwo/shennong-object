@@ -4,7 +4,7 @@ test_that("sn_assays returns correct assay names", {
   # Create a mock Shennong object using sn_initialize_shennong_object
   data("so")
   # Test
-  expect_equal(sn_assays(so), c("RNA","ATAC"))
+  expect_equal(sn_assays(so), c("RNA", "ATAC"))
 })
 
 test_that("sn_active_assay gets and sets active assay", {
@@ -23,7 +23,7 @@ test_that("sn_active_assay gets and sets active assay", {
 test_that("sn_layers returns correct layers", {
   data("so")
   # Test
-  expect_equal(sn_layers(so), c("counts","data","scale.data"))
+  expect_equal(sn_layers(so), c("counts", "data", "scale.data"))
 })
 
 test_that("sn_active_layer gets and sets active layer", {
@@ -155,5 +155,3 @@ test_that("sn_fetch_data fetches metadata, expression, ident, and reduction", {
   expect_true(all(c("condition", "gender", "gene1", "PC_1", "ident") %in% colnames(df)))
   expect_equal(nrow(df), unname(ncol(so)))
 })
-
-
