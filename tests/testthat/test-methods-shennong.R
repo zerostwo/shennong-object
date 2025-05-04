@@ -1,7 +1,7 @@
 # Test for methods in methods-shennong.R
 
 test_that("sn_assays returns correct assay names", {
-  # Create a mock Shennong object using sn_create_shennong_object
+  # Create a mock Shennong object using sn_initialize_shennong_object
   data("so")
   # Test
   expect_equal(sn_assays(so), c("RNA","ATAC"))

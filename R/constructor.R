@@ -7,7 +7,7 @@
 #' @param counts A matrix-like object (e.g., matrix, dgCMatrix) containing the
 #'   raw counts. Rows typically represent features (genes) and columns represent
 #'   samples. Column names are required and will be used as primary sample
-#'   identifiers.
+#'   identifiers. If NULL, an empty Shennong object is created.
 #' @param assay Character string. The name to assign to the primary assay
 #'   created from the \code{counts} matrix (default: "RNA").
 #' @param metadata Optional data frame or DataFrame containing sample-level
@@ -41,7 +41,7 @@
 #' )
 #'
 #' # Create a Shennong object
-#' sn_obj <- sn_create_shennong_object(
+#' sn_obj <- sn_initialize_shennong_object(
 #'   counts = counts_matrix,
 #'   metadata = sample_metadata,
 #'   project = "TestProject",
@@ -51,12 +51,12 @@
 #' print(sn_obj)
 #'
 #' # Create object without metadata
-#' sn_obj_no_meta <- sn_create_shennong_object(counts = counts_matrix)
+#' sn_obj_no_meta <- sn_initialize_shennong_object(counts = counts_matrix)
 #' print(sn_obj_no_meta)
 #'
 #' # Apply basic filtering during creation
 #' counts_matrix[, 1] <- 0 # Make first sample have 0 counts
-#' sn_obj_filtered <- sn_create_shennong_object(
+#' sn_obj_filtered <- sn_initialize_shennong_object(
 #'   counts = counts_matrix,
 #'   metadata = sample_metadata,
 #'   min_counts = 10, # Filter sample 1
@@ -64,8 +64,8 @@
 #' )
 #' print(sn_obj_filtered) # Should have 9 samples
 #'
-sn_create_shennong_object <- function(
-    counts,
+sn_initialize_shennong_object <- function(
+    counts = NULL,
     assay = "RNA",
     metadata = NULL,
     project = "Shennong",
@@ -73,9 +73,26 @@ sn_create_shennong_object <- function(
     min_counts = 0,
     min_features = 0,
     ...) {
-  if (missing(counts)) {
-    stop("Input 'counts' matrix is required.")
+  if (is.null(counts)) {
+    # Initialize an empty Shennong object
+    mae <- MultiAssayExperiment()
+    sn_obj <- new(
+      "Shennong",
+      mae,
+      organism = as.character(organism)[1],
+      active_assay = character(0),
+      active_ident = factor(),
+      reductions = list(),
+      project_name = as.character(project)[1],
+      misc = list(),
+      version = as.character(utils::packageVersion("ShennongObject")),
+      commands = list(),
+      tools = list(),
+      ...
+    )
+    return(sn_obj)
   }
+
   if (!inherits(counts, "matrix") && !inherits(counts, "Matrix")) {
     stop("'counts' must be a matrix or Matrix object.")
   }
@@ -203,83 +220,84 @@ sn_create_shennong_object <- function(
   return(sn_obj)
 }
 
-
 # Logging Function --------------------------------------------------------
 #' Log a Shennong command
 #'
 #' Captures the current function call and parameters for provenance tracking.
-#' Can return the command object or store it in the Shennong object's @commands
-#' list.
-#'
 #' @param object A Shennong object
 #' @param return_command Logical; return command object instead of storing it
-#'
-#' @return A Shennong object with updated @commands slot, or a ShennongCommand
-#'   object
+#' @param .info A named list of parameters to inject into the command log
+#' @return A Shennong object or a ShennongCommand object
 #' @export
-sn_log_shennong_command <- function(object, return_command = FALSE) {
+sn_log_shennong_command <- function(object, return_command = FALSE, .info = list()) {
   time_stamp <- Sys.time()
   which.frame <- sys.nframe() - 1
   if (which.frame < 1) {
     stop("'LogShennongCommand' cannot be called at the top level", call. = FALSE)
   }
 
-  if (as.character(sys.calls()[[1]])[1] == "do.call") {
-    call_string <- deparse(sys.calls()[[1]])
-    command_name <- as.character(sys.calls()[[1]])[2]
-  } else {
-    command_name <- deparse(sys.calls()[[which.frame]])
-    command_name <- gsub("\\.Shennong", "", command_name)
-    call_string <- command_name
-    command_name <- sub("\\(.*$", "", command_name)
-  }
+  # Get command call
+  call_obj <- sys.call(which.frame)
+  command_name <- as.character(call_obj[[1]])
+  command_name <- gsub("\\.Shennong$", "", command_name)
+  call_string <- deparse(call_obj)
 
-  argnames <- names(formals(sys.function(which = sys.parent(1))))
-  argnames <- setdiff(argnames, c("object", "..."))
-  params <- list()
+  # Capture parameters
   p.env <- parent.frame(1)
-  argnames <- intersect(argnames, ls(p.env))
-  # for (arg in argnames) {
-  #   param_value <- get(arg, envir = p.env)
-  #   if (inherits(param_value, "Shennong")) next
-  #   params[[arg]] <- param_value
-  # }
-  for (arg in argnames) {
-    param_value <- get(arg, envir = p.env)
-    if (inherits(param_value, "Shennong")) next
+  params <- list()
 
-    # Skip large data objects for logging
-    if (inherits(param_value, c("matrix", "Matrix", "SummarizedExperiment", "data.frame"))) {
-      params[[arg]] <- glue("<{class(param_value)[1]}: {dim(param_value)[1]} x {dim(param_value)[2]}>")
-    } else {
-      params[[arg]] <- param_value
+  # Try to evaluate visible named arguments from the call
+  call_obj <- sys.call(which.frame)
+  args_env <- parent.frame(1)
+
+  if (is.call(call_obj)) {
+    call_list <- as.list(call_obj)[-1] # remove function name
+    for (arg_name in names(call_list)) {
+      if (is.null(arg_name) || arg_name == "") next
+      val <- tryCatch(eval(call_list[[arg_name]], envir = args_env), error = function(e) NULL)
+      if (inherits(val, "Shennong")) next
+      if (inherits(val, c("matrix", "Matrix", "SummarizedExperiment", "data.frame"))) {
+        params[[arg_name]] <- glue::glue("<{class(val)[1]}: {dim(val)[1]} x {dim(val)[2]}>")
+      } else {
+        params[[arg_name]] <- val
+      }
     }
   }
 
-  assay <- params[["assay"]]
-  cmd.assay <- assay
-  if (!is.null(assay)) {
-    command_name <- paste(command_name, assay, sep = ".")
+  for (k in names(.info)) {
+    params[[k]] <- .info[[k]]
   }
-  command_name <- gsub("\\.+$", "", command_name)
-  command_name <- sub("\\.\\.", ".", command_name)
+
+  # Add structured info
+  for (k in names(.info)) {
+    params[[k]] <- .info[[k]]
+  }
+
+  cmd.assay <- .info[["assay"]] %||% params[["assay"]] %||% NA_character_
+
+  # Auto naming to avoid overwrite
+  base_name <- command_name
+  index <- 1
+  final_name <- base_name
+  while (final_name %in% names(object@commands)) {
+    final_name <- paste0(base_name, "_", index)
+    index <- index + 1
+  }
 
   shen_cmd <- new(
-    Class = "ShennongCommand",
-    name = command_name,
+    "ShennongCommand",
+    name = final_name,
     params = params,
     time_stamp = time_stamp,
     call_string = call_string,
-    assay_used = cmd.assay %||% NA_character_
+    assay_used = cmd.assay
   )
 
-  if (isTRUE(return_command)) {
-    return(shen_cmd)
-  }
-  object@commands[[command_name]] <- shen_cmd
+  if (isTRUE(return_command)) return(shen_cmd)
+
+  object@commands[[final_name]] <- shen_cmd
   return(object)
 }
-
 
 # Reduction ---------------------------------------------------------------
 #' Create a dimensional reduction object for Shennong

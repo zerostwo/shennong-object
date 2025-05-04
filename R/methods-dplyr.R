@@ -6,6 +6,8 @@
 #'
 #' @param .data A `Shennong` object.
 #' @param ... Filtering conditions passed to `dplyr::filter()`.
+#' @param layer The name of the expression matrix layer to use for filtering. If `NULL`,
+#'   the active layer will be used.
 #' @param .by Optional grouping variable(s).
 #' @param .preserve Whether to preserve the grouping structure.
 #'
@@ -21,29 +23,78 @@
 #' @importFrom dplyr filter mutate
 #' @importFrom tibble as_tibble
 #' @export
-filter.Shennong <- function(.data, ..., .by = NULL, .preserve = FALSE) {
+filter.Shennong <- function(.data, ..., layer = NULL, .by = NULL, .preserve = FALSE) {
   if (!inherits(.data, "Shennong")) {
-    stop("The object must be a Shennong object.")
+    abort("The object must be a Shennong object.")
   }
 
-  # 1. Extract colData and convert to tibble for filtering
-  meta <- colData(.data)
-  meta_tbl <- as_tibble(meta, .name_repair = "minimal") %>%
-    mutate(.sample_id = rownames(meta))
+  # Capture filtering expressions
+  subset_exprs <- rlang::enquos(...)
 
-  # 2. Apply dplyr filtering
-  filtered_tbl <- filter(meta_tbl, ..., .by = .by, .preserve = .preserve)
+  # 1. Get colData
+  meta <- as_tibble(colData(.data), rownames = "obversation")
 
-  if (nrow(filtered_tbl) == 0) {
-    abort("No samples matched the filter criteria!")
+  # 2. Get expression matrix (active layer)
+  active_layer <- layer %||% sn_active_layer(.data)
+  expr_before <- tryCatch({
+    mat <- sn_layer_data(.data, layer = active_layer)
+    df <- as_tibble(t(mat), rownames = "obversation")
+    df
+  }, error = function(e) NULL)
+
+  # 3. Get all reductions without prefixing column names
+  reductions <- lapply(.data@reductions, function(red) {
+    emb <- red@embedding
+    df <- as.data.frame(emb)
+    df$obversation <- rownames(df)
+    df
+  })
+  reductions <- Reduce(function(x, y) merge(x, y, by = "obversation", all = TRUE), reductions)
+
+  # 4. Merge all into one tibble
+  dfs <- list(meta, expr_before, reductions)
+  dfs <- dfs[!vapply(dfs, is.null, logical(1))]
+  df <- Reduce(function(x, y) merge(x, y, by = "obversation", all = TRUE), dfs)
+  df <- tibble::as_tibble(df)
+
+  # 5. Filter
+  df_filtered <- dplyr::filter(df, !!!subset_exprs, .by = {{ .by }}, .preserve = .preserve)
+  if (nrow(df_filtered) == 0) {
+    abort("No samples matched the filter criteria.")
   }
 
-  # 3. Get filtered sample IDs
-  kept_samples <- filtered_tbl$.sample_id
+  kept_samples <- df_filtered$obversation
 
-  # 4. Subset Shennong object (samples = columns)
+  # 6. Subset Shennong object
+  n_samples_before <- ncol(.data)
+  n_features_before <- if (!is.null(expr_before)) ncol(expr_before) - 1 else NA
+
   .data <- .data[, kept_samples]
+  .data@active_ident <- droplevels(.data@active_ident[kept_samples])
 
-  # 5. Return the filtered object
+  # Filter reductions
+  .data@reductions <- lapply(.data@reductions, function(red) {
+    red@embedding <- red@embedding[kept_samples, , drop = FALSE]
+    red
+  })
+
+  # 7. After filter, record for logging
+  expr_after <- tryCatch({
+    sn_layer_data(.data, layer = active_layer)
+  }, error = function(e) NULL)
+
+  n_samples_after <- length(kept_samples)
+  n_features_after <- if (!is.null(expr_after)) nrow(expr_after) else NA
+
+  log_info <- list(
+    layer = active_layer,
+    assay = sn_active_assay(.data),
+    samples_before = n_samples_before,
+    samples_after = n_samples_after,
+    features_before = n_features_before,
+    features_after = n_features_after
+  )
+
+  .data <- sn_log_shennong_command(.data, .info = log_info)
   return(.data)
 }

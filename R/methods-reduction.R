@@ -7,7 +7,6 @@ setMethod("sn_reductions", "Shennong", function(object, ...) {
   return(names(slot(object = object, name = "reductions")))
 })
 
-
 #' @rdname sn_active_reduction
 #' @export
 setMethod("sn_active_reduction", signature("Shennong", "ANY"), function(object, assay = NULL) {
@@ -38,13 +37,6 @@ setReplaceMethod(
     red_to_set <- object@reductions[[value]]
     assay <- red_to_set@assay_used
 
-    # # update all reductions matching this assay
-    # object@reductions <- purrr::imap(object@reductions, function(r, nm) {
-    #   if (r@assay_used == assay) {
-    #     r@global <- (nm == value)
-    #   }
-    #   r
-    # })
     # update all reductions matching this assay
     for (nm in names(object@reductions)) {
       r <- object@reductions[[nm]]
@@ -120,13 +112,6 @@ setReplaceMethod(
     assay <- value@assay_used
     value@global <- TRUE
 
-    # # 2. Clear global flags for existing reductions with the same assay
-    # x@reductions <- purrr::imap(x@reductions, function(r, nm) {
-    #   if (r@assay_used == assay) {
-    #     r@global <- FALSE
-    #   }
-    #   r
-    # })
     # Clear global flags for existing reductions with the same assay
     for (nm in names(x@reductions)) {
       r <- x@reductions[[nm]]

@@ -229,15 +229,6 @@ setGeneric("sn_stash_ident", function(object, save.name = "orig.ident", ...) sta
 #' @export
 setGeneric("sn_commands", function(object, command = NULL, ...) standardGeneric("sn_commands"))
 
-#' Set Command History<-
-#' @param object A Shennong object.
-#' @param command Name for the command log entry.
-#' @param ... Additional arguments.
-#' @param value The command log data.
-#' @rdname sn_commands
-#' @export
-setGeneric("sn_commands<-", function(object, command, ..., value) standardGeneric("sn_commands<-"))
-
 # Generics for Reduction-class --------------------------------------------
 #' Get Dimensional Reductions
 #' @param object A Shennong object or other class.

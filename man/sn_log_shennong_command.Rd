@@ -4,19 +4,18 @@
 \alias{sn_log_shennong_command}
 \title{Log a Shennong command}
 \usage{
-sn_log_shennong_command(object, return_command = FALSE)
+sn_log_shennong_command(object, return_command = FALSE, .info = list())
 }
 \arguments{
 \item{object}{A Shennong object}
 
 \item{return_command}{Logical; return command object instead of storing it}
+
+\item{.info}{A named list of parameters to inject into the command log}
 }
 \value{
-A Shennong object with updated @commands slot, or a ShennongCommand
-  object
+A Shennong object or a ShennongCommand object
 }
 \description{
 Captures the current function call and parameters for provenance tracking.
-Can return the command object or store it in the Shennong object's @commands
-list.
 }

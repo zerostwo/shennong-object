@@ -3,7 +3,7 @@ test_that("Shennong object constructor works with minimal input", {
   rownames(counts) <- paste0("gene", seq_len(nrow(counts)))
   colnames(counts) <- paste0("sample", seq_len(ncol(counts)))
 
-  so <- sn_create_shennong_object(counts = counts)
+  so <- sn_initialize_shennong_object(counts = counts)
   expect_s4_class(so, "Shennong")
   expect_equal(sn_assays(so), "RNA")
   expect_equal(dim(sn_layer_data(so, layer = "counts")), dim(counts))
@@ -20,7 +20,7 @@ test_that("Shennong object constructor handles metadata correctly", {
     row.names = colnames(counts)
   )
 
-  so <- sn_create_shennong_object(counts = counts, metadata = metadata)
+  so <- sn_initialize_shennong_object(counts = counts, metadata = metadata)
   expect_s4_class(so, "Shennong")
   expect_equal(dim(sn_metadata(so)), c(10, 5)) # 2 metadata + 2 QC + 1 sample_id
 })
@@ -31,7 +31,7 @@ test_that("Filtering by min_counts and min_features works", {
   rownames(counts) <- paste0("gene", seq_len(nrow(counts)))
   colnames(counts) <- paste0("sample", seq_len(ncol(counts)))
 
-  so <- sn_create_shennong_object(counts = counts, min_counts = 100, min_features = 10)
+  so <- sn_initialize_shennong_object(counts = counts, min_counts = 100, min_features = 10)
   expect_s4_class(so, "Shennong")
   expect_lt(ncol(sn_layer_data(so, "counts")), 10)
 })
@@ -39,12 +39,12 @@ test_that("Filtering by min_counts and min_features works", {
 test_that("Shennong constructor gives informative errors", {
   bad_counts <- matrix(rpois(1000, 10), 100, 10)
   # Missing colnames
-  expect_error(sn_create_shennong_object(counts = bad_counts[, -1]),
+  expect_error(sn_initialize_shennong_object(counts = bad_counts[, -1]),
                "Column names are required")
 
   bad_counts_dup <- bad_counts
   colnames(bad_counts_dup) <- rep("sample1", 10)
-  expect_error(sn_create_shennong_object(counts = bad_counts_dup),
+  expect_error(sn_initialize_shennong_object(counts = bad_counts_dup),
                "Duplicate sample names")
 })
 

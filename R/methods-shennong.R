@@ -326,10 +326,7 @@ setMethod("sn_layer_data<-", "Shennong", function(object,
 
 #' @rdname sn_metadata
 setMethod("sn_metadata", "Shennong", function(object, cols = NULL, drop = FALSE, ...) {
-  cd <- colData(object) %>%
-    as.data.frame() %>%
-    tibble::rownames_to_column("sample_id") %>%
-    tibble::as_tibble()
+  cd <- tibble::as_tibble(x = colData(object), rownames = "obversation")
   if (is.null(cols)) {
     return(cd)
   } else {
@@ -408,9 +405,17 @@ setMethod("sn_add_metadata", "Shennong", function(object, metadata, col_name = N
     current_cd <- cbind(current_cd, new_df) # Add all new ones
   }
 
+  new_columns <- setdiff(colnames(new_df), cols_collision)
+
+  info <- list(
+    input_type = class(metadata)[1],
+    new_columns = new_columns,
+    overwritten_columns = ifelse(length(cols_collision) > 0, cols_collision, "None")
+  )
+
   colData(object) <- current_cd
 
-  object <- sn_log_shennong_command(object)
+  object <- sn_log_shennong_command(object, .info = info)
 
   validObject(object)
   return(object)

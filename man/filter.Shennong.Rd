@@ -4,12 +4,15 @@
 \alias{filter.Shennong}
 \title{Filter samples in a Shennong object using dplyr syntax}
 \usage{
-\method{filter}{Shennong}(.data, ..., .by = NULL, .preserve = FALSE)
+\method{filter}{Shennong}(.data, ..., layer = NULL, .by = NULL, .preserve = FALSE)
 }
 \arguments{
 \item{.data}{A `Shennong` object.}
 
 \item{...}{Filtering conditions passed to `dplyr::filter()`.}
+
+\item{layer}{The name of the expression matrix layer to use for filtering. If `NULL`,
+the active layer will be used.}
 
 \item{.by}{Optional grouping variable(s).}
 
