@@ -48,7 +48,7 @@ sn_active_layer(so) <- "data"
 so <- sn_add_assay(so, data = atac_counts, assay = "ATAC")
 
 # Set sample identities by condition
-sn_active_ident(so) <- meta$condition
+sn_active_ident(so) <- "condition"
 
 # PCA reduction on scaled RNA data
 pca_res <- prcomp(t(rna_scale), center = TRUE, scale. = FALSE)
@@ -75,4 +75,4 @@ so[["mds"]] <- sn_create_reduction(
 )
 
 # Save to package
-# usethis::use_data(so, overwrite = TRUE)
+usethis::use_data(so, overwrite = TRUE)

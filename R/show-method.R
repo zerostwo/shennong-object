@@ -63,6 +63,8 @@ setMethod(
 #'
 #' @param object A ShennongReduction object.
 #' @export
+#' @rdname ShennongReduction-class
+#' @aliases show,ShennongReduction-method
 setMethod("show", "ShennongReduction", function(object) {
   n_samples <- nrow(object@embedding)
   n_dims <- ncol(object@embedding)

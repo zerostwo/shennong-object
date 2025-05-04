@@ -8,6 +8,14 @@
 \description{
 Provides a tidy, extensible, and modular S4 data infrastructure for organizing and analyzing multi-omics and single-cell datasets in R. The ShennongObject class extends MultiAssayExperiment to support streamlined integration of assays, flexible metadata management, dimensionality reductions, visualization tools, and analysis provenance tracking. Designed for compatibility with tidyverse-style workflows and modern bioinformatics pipelines.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/zerostwo/shennong-object}
+  \item Report bugs at \url{https://github.com/zerostwo/shennong-object/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Songqi Duan \email{duan@songqi.org} (\href{https://orcid.org/0000-0002-0822-5883}{ORCID})
 

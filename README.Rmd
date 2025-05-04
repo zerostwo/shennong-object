@@ -1,0 +1,80 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+library(ShennongObject)
+library(SummarizedExperiment) # For DataFrame
+library(Matrix) # For sparse matrix example
+set.seed(717) # for reproducibility
+```
+
+# ShennongObject
+
+<!-- badges: start -->
+[![Codecov test coverage](https://codecov.io/gh/zerostwo/shennong-object/graph/badge.svg)](https://app.codecov.io/gh/zerostwo/shennong-object)
+[![R-CMD-check](https://github.com/zerostwo/shennong-object/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/zerostwo/shennong-object/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+The goal of `ShennongObject` is to provide an S4 class, `Shennong`, designed for storing and analyzing multi-modal single-cell and bulk omics data. It builds upon the `MultiAssayExperiment` framework, offering a structured way to manage multiple assays (e.g., RNA, ATAC), data layers within assays (e.g., counts, normalized data, scaled data), dimensional reductions (e.g., PCA, UMAP), sample metadata, and analysis provenance.
+
+## Installation
+
+To install the development version from GitHub:
+
+```r
+# install.packages("pak")
+pak::pak("zerostwo/shennong-object")
+```
+
+## Quick Start Example
+
+This is a basic example showing how to create a `Shennong` object:
+
+```{r example}
+library(ShennongObject)
+
+# 1. Create dummy RNA counts matrix (genes x samples)
+genes <- paste0("Gene", 1:100)
+samples <- paste0("Sample", 1:10)
+rna_counts <- matrix(
+  rpois(1000, lambda = 10),
+  nrow = 100,
+  dimnames = list(genes, samples)
+)
+# Make it sparse for demonstration
+rna_counts[sample(1000, 300)] <- 0
+rna_counts <- as(rna_counts, "dgCMatrix")
+
+# 2. Create dummy sample metadata
+sample_metadata <- data.frame(
+  condition = sample(c("Control", "Treated"), 10, replace = TRUE),
+  batch = factor(sample(c("A", "B"), 10, replace = TRUE)),
+  row.names = samples
+)
+
+# 3. Create the Shennong object
+sn_obj <- sn_initialize_shennong_object(
+  counts = rna_counts,
+  metadata = sample_metadata,
+  project = "QuickStart",
+  assay = "RNA" # Name for the primary assay
+)
+
+# Print basic summary
+print(sn_obj)
+```
+
+For more detailed usage, please see the package vignettes, starting with the "Quick Start Guide":
+
+## Code of Conduct
+  
+  Please note that the ShennongObject project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.

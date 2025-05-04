@@ -52,7 +52,7 @@ test_that("sn_active_ident gets and sets active ident", {
   data("so")
 
   # Test getter
-  expect_equal(unname(sn_active_ident(so)), factor(rep("ExampleProject", 20)))
+  expect_equal(unname(sn_active_ident(so)), factor(rep(c("Normal", "Tumor"), each = 10)))
 
   # Test setter
   sn_active_ident(so) <- factor(rep("NewIdent", 20))
@@ -63,7 +63,7 @@ test_that("sn_project_name gets and sets project name", {
   data("so")
 
   # Test getter
-  expect_equal(sn_project_name(so), "ExampleProject")
+  expect_equal(sn_project_name(so), "Shennong")
 
   # Test setter
   sn_project_name(so) <- "NewProject"

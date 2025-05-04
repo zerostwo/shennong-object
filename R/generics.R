@@ -192,34 +192,6 @@ setGeneric("sn_add_assay", function(object, data, assay, layer = "counts") {
 #' @export
 setGeneric("sn_fetch_data", function(object, vars, samples = NULL, layer = NULL, clean = TRUE, ...) standardGeneric("sn_fetch_data"))
 
-#' Get samples grouped by identity class
-#' @param object A Shennong object.
-#' @param idents Identity levels to include.
-#' @param samples Samples to consider.
-#' @param return.null Return NULL if no samples found.
-#' @rdname sn_samples_by_identities
-#' @export
-setGeneric("sn_samples_by_identities", function(object, idents = NULL, samples = NULL, return.null = FALSE) standardGeneric("sn_samples_by_identities"))
-
-#' Reorder Sample Identities
-#' @param object A Shennong object.
-#' @param var Variable to use for ordering.
-#' @param reverse Reverse order.
-#' @param fun Aggregation function.
-#' @param reorder.numeric Rename levels numerically.
-#' @param ... Additional arguments.
-#' @rdname sn_reorder_ident
-#' @export
-setGeneric("sn_reorder_ident", function(object, var, reverse = FALSE, fun = mean, reorder.numeric = FALSE, ...) standardGeneric("sn_reorder_ident"))
-
-#' Stash Current Identities
-#' @param object A Shennong object.
-#' @param save.name Column name to save identities under.
-#' @param ... Additional arguments.
-#' @rdname sn_stash_ident
-#' @export
-setGeneric("sn_stash_ident", function(object, save.name = "orig.ident", ...) standardGeneric("sn_stash_ident"))
-
 # Generics for Command-class ----------------------------------------------
 #' Get Command History
 #' @param object A Shennong object or other class.

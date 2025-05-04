@@ -32,13 +32,13 @@ filter.Shennong <- function(.data, ..., layer = NULL, .by = NULL, .preserve = FA
   subset_exprs <- rlang::enquos(...)
 
   # 1. Get colData
-  meta <- as_tibble(colData(.data), rownames = "obversation")
+  meta <- as_tibble(colData(.data), rownames = "observation")
 
   # 2. Get expression matrix (active layer)
   active_layer <- layer %||% sn_active_layer(.data)
   expr_before <- tryCatch({
     mat <- sn_layer_data(.data, layer = active_layer)
-    df <- as_tibble(t(mat), rownames = "obversation")
+    df <- as_tibble(t(mat), rownames = "observation")
     df
   }, error = function(e) NULL)
 
@@ -46,15 +46,15 @@ filter.Shennong <- function(.data, ..., layer = NULL, .by = NULL, .preserve = FA
   reductions <- lapply(.data@reductions, function(red) {
     emb <- red@embedding
     df <- as.data.frame(emb)
-    df$obversation <- rownames(df)
+    df$observation <- rownames(df)
     df
   })
-  reductions <- Reduce(function(x, y) merge(x, y, by = "obversation", all = TRUE), reductions)
+  reductions <- Reduce(function(x, y) merge(x, y, by = "observation", all = TRUE), reductions)
 
   # 4. Merge all into one tibble
   dfs <- list(meta, expr_before, reductions)
   dfs <- dfs[!vapply(dfs, is.null, logical(1))]
-  df <- Reduce(function(x, y) merge(x, y, by = "obversation", all = TRUE), dfs)
+  df <- Reduce(function(x, y) merge(x, y, by = "observation", all = TRUE), dfs)
   df <- tibble::as_tibble(df)
 
   # 5. Filter
@@ -63,7 +63,7 @@ filter.Shennong <- function(.data, ..., layer = NULL, .by = NULL, .preserve = FA
     abort("No samples matched the filter criteria.")
   }
 
-  kept_samples <- df_filtered$obversation
+  kept_samples <- df_filtered$observation
 
   # 6. Subset Shennong object
   n_samples_before <- ncol(.data)

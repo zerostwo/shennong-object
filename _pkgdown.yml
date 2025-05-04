@@ -1,3 +1,77 @@
 url: ~
 template:
   bootstrap: 5
+
+articles:
+  - title: "Quick Start Guide"
+    dropdown: true
+    contents:
+      - quick_start
+
+reference:
+  - title: "Core Object & Classes"
+    desc: "Main S4 classes, constructor, package documentation, and example dataset."
+    contents:
+      - Shennong-class
+      - sn_initialize_shennong_object
+      - show,Shennong-method
+      - so
+
+  - title: "Data Accessors"
+    desc: "Functions to retrieve data and metadata from Shennong objects."
+    contents:
+      - sn_active_assay
+      - sn_active_ident
+      - sn_active_layer
+      - sn_active_reduction
+      - sn_assays
+      - sn_fetch_data
+      - sn_layer_data
+      - sn_layers
+      - sn_metadata
+      - sn_reductions
+      - sn_features
+      - sn_samples
+      - sn_levels
+
+  - title: "Data Manipulation"
+    desc: "Functions to modify data within Shennong objects."
+    contents:
+      - sn_add_assay
+      - sn_add_metadata
+
+  - title: "Dimensionality Reduction"
+    desc: "Class and functions related to dimensionality reduction results."
+    contents:
+      - ShennongReduction-class
+      - sn_create_reduction
+      - sn_embeddings
+      - sn_loadings
+      - sn_stdev
+      - show,ShennongReduction-method
+
+  - title: "Plotting"
+    desc: "Functions for visualizing Shennong objects."
+    contents:
+      - ggplot.Shennong
+
+  - title: "Command Log"
+    desc: "Class and functions for tracking computational history."
+    contents:
+      - ShennongCommand-class
+      - sn_commands
+      - sn_log_shennong_command
+      - show,ShennongCommand-method
+
+  - title: "Generic Methods & Utilities"
+    desc: "Implementations of standard generics and other utility functions."
+    contents:
+      - filter.Shennong
+      - dim,Shennong-method
+      - dimnames,Shennong-method
+      - head,Shennong-method
+      - sn_misc
+      - sn_project_name
+      - sn_tools
+      - sn_version
+      - ShennongTool-class

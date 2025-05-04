@@ -326,7 +326,7 @@ setMethod("sn_layer_data<-", "Shennong", function(object,
 
 #' @rdname sn_metadata
 setMethod("sn_metadata", "Shennong", function(object, cols = NULL, drop = FALSE, ...) {
-  cd <- tibble::as_tibble(x = colData(object), rownames = "obversation")
+  cd <- tibble::as_tibble(x = colData(object), rownames = "observation")
   if (is.null(cols)) {
     return(cd)
   } else {

@@ -1,0 +1,253 @@
+---
+title: "ShennongObject: Quick Start Guide"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{quick_start}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(ShennongObject)
+library(SummarizedExperiment) # For DataFrame
+library(Matrix) # For sparse matrix example
+set.seed(717) # for reproducibility
+```
+
+## Introduction
+
+The `ShennongObject` package provides an S4 class, `Shennong`, designed for storing and analyzing multi-modal single-cell and bulk omics data. It builds upon the `MultiAssayExperiment` framework, offering a structured way to manage multiple assays (e.g., RNA, ATAC), data layers within assays (e.g., counts, normalized data, scaled data), dimensional reductions (e.g., PCA, UMAP), sample metadata, and analysis provenance.
+
+This vignette provides a quick overview of creating and interacting with a `Shennong` object.
+
+## Installation
+
+```r
+# install.packages("pak")
+pak::pak("zerostwo/shennong-object")
+```
+
+## Creating a ShennongObject
+
+The primary way to create a `Shennong` object is using the `sn_initialize_shennong_object()` function. You need at least a counts matrix where columns represent samples and rows represent features (e.g., genes, peaks).
+
+```{r create_data}
+# 1. Create dummy RNA counts matrix (genes x samples)
+genes <- paste0("Gene", 1:100)
+samples <- paste0("Sample", 1:10)
+rna_counts <- matrix(
+  rpois(1000, lambda = 10),
+  nrow = 100,
+  dimnames = list(genes, samples)
+)
+# Make it sparse for demonstration
+rna_counts[sample(1000, 300)] <- 0
+rna_counts <- as(rna_counts, "dgCMatrix")
+
+# 2. Create dummy sample metadata
+sample_metadata <- data.frame(
+  condition = sample(c("Control", "Treated"), 10, replace = TRUE),
+  batch = factor(sample(c("A", "B"), 10, replace = TRUE)),
+  row.names = samples
+)
+
+# 3. Create the Shennong object
+sn_obj <- sn_initialize_shennong_object(
+  counts = rna_counts,
+  metadata = sample_metadata,
+  project = "QuickStart",
+  assay = "RNA" # Name for the primary assay
+)
+
+# Print basic summary
+print(sn_obj)
+```
+
+The constructor automatically calculates `nCount_RNA` and `nFeature_RNA` and adds them to the sample metadata.
+
+## Exploring the Object
+
+Several accessor functions help explore the object's contents:
+
+```{r explore_object}
+# Get object dimensions (features in active assay x samples)
+dim(sn_obj)
+
+# Get sample names (primary sample identifiers)
+head(sn_samples(sn_obj))
+
+# Get feature names (from the active assay)
+head(sn_features(sn_obj))
+
+# List available assays
+sn_assays(sn_obj)
+
+# Get the currently active assay
+sn_active_assay(sn_obj)
+
+# List available data layers within the active assay
+sn_layers(sn_obj) # Initially just 'counts'
+
+# Get the currently active layer within the active assay
+sn_active_layer(sn_obj)
+
+# Access sample metadata (colData)
+head(sn_metadata(sn_obj))
+
+# Access specific metadata columns
+head(sn_metadata(sn_obj, cols = c("condition", "nCount_RNA")))
+
+# Get the current sample identities
+sn_active_ident(sn_obj) # Initially set to project name
+
+# Get levels of the current identity
+sn_levels(sn_obj)
+```
+
+## Managing Assays and Layers
+
+You can add new assays and data layers to the object.
+
+```{r manage_assays_layers}
+# Add a normalized data layer to the RNA assay
+rna_normalized_data <- log1p(rna_counts)
+sn_layer_data(sn_obj, layer = "logcounts", assay = "RNA") <- rna_normalized_data
+
+# Check the layers again
+sn_layers(sn_obj, assay = "RNA")
+
+# Set the active layer for the RNA assay
+sn_active_layer(sn_obj, assay = "RNA") <- "logcounts"
+sn_active_layer(sn_obj, assay = "RNA")
+
+# Access the new layer's data (first 5 features, 3 samples)
+sn_layer_data(sn_obj, layer = "logcounts")[1:5, 1:3]
+
+# Create dummy ATAC data (peaks x samples)
+peaks <- paste0("Peak", 1:50)
+atac_counts <- matrix(
+  rpois(500, lambda = 5),
+  nrow = 50,
+  dimnames = list(peaks, samples) # Use same sample names
+)
+
+# Add ATAC assay
+sn_obj <- sn_add_assay(sn_obj, data = atac_counts, assay = "ATAC")
+
+# Check assays again
+sn_assays(sn_obj)
+
+# Switch active assay
+sn_active_assay(sn_obj) <- "ATAC"
+sn_active_assay(sn_obj)
+
+# Dimensions now reflect the ATAC assay
+dim(sn_obj)
+head(sn_features(sn_obj)) # Now shows peaks
+
+# Switch back to RNA
+sn_active_assay(sn_obj) <- "RNA"
+```
+
+## Managing Metadata
+
+Add new metadata columns easily.
+
+```{r manage_metadata}
+# Add a new metadata column (e.g., sequencing depth)
+seq_depth <- runif(10, 1e6, 5e6)
+names(seq_depth) <- samples # Ensure names match samples
+
+sn_obj <- sn_add_metadata(sn_obj, metadata = seq_depth, col_name = "SeqDepth")
+
+# Add multiple columns via a data frame
+extra_meta <- data.frame(
+  QC_flag = sample(c("Pass", "Fail"), 10, replace = TRUE),
+  row.names = samples
+)
+sn_obj <- sn_add_metadata(sn_obj, metadata = extra_meta)
+
+# View updated metadata
+head(sn_metadata(sn_obj))
+```
+
+## Managing Identities
+
+Sample identities are crucial for grouping and visualization.
+
+```{r manage_idents}
+# Set identities based on a metadata column
+sn_active_ident(sn_obj) <- "condition"
+sn_active_ident(sn_obj)
+sn_levels(sn_obj)
+
+# Stash the current identity before changing it
+# sn_obj <- sn_stash_ident(sn_obj, save.name = "condition_ident")
+# head(sn_metadata(sn_obj)) # 'condition_ident' added
+
+# Set identities based on batch
+sn_active_ident(sn_obj) <- "batch"
+sn_active_ident(sn_obj)
+sn_levels(sn_obj)
+```
+
+## Managing Dimensional Reductions
+
+Store results from dimensionality reduction techniques like PCA or UMAP.
+
+```{r manage_reductions}
+# Perform PCA on the logcounts data (requires transpose)
+# Note: Use a dedicated PCA function in practice (e.g., irlba, stats::prcomp)
+pca_res <- prcomp(t(as.matrix(sn_layer_data(sn_obj, layer = "logcounts"))), scale. = TRUE)
+
+# Create a ShennongReduction object
+# embedding: samples x dimensions
+# loadings: features x dimensions (optional)
+# stdev: standard deviations (optional)
+pca_reduction <- sn_create_reduction(
+  embedding = pca_res$x[, 1:5], # Store first 5 PCs
+  loadings = pca_res$rotation[, 1:5],
+  stdev = pca_res$sdev[1:5],
+  assay_used = "RNA", # Record the source assay
+  key = "PC" # Key for naming embedding columns (PC_1, PC_2, ...)
+)
+
+# Add the reduction to the object using [[<-
+sn_obj[["pca"]] <- pca_reduction
+
+# List available reductions
+sn_reductions(sn_obj)
+
+# Access embeddings (samples x PCs)
+head(sn_embeddings(sn_obj, reduction = "pca"))
+
+# Access loadings (features x PCs)
+head(sn_loadings(sn_obj, reduction = "pca"))
+
+# Access standard deviations
+sn_stdev(sn_obj, reduction = "pca")
+```
+
+## Fetching Data
+
+The `sn_fetch_data()` function provides a convenient way to retrieve combinations of metadata, identities, expression data (from the active layer of the active assay), and reduction embeddings.
+
+```{r fetch_data}
+# Fetch metadata ('condition') and first two PCs ('PC_1', 'PC_2')
+plot_data <- sn_fetch_data(sn_obj, vars = c("condition", "PC_1", "PC_2"))
+head(plot_data)
+
+# Fetch expression of Gene1 and Gene2, plus batch info
+expr_data <- sn_fetch_data(sn_obj, vars = c("Gene1", "Gene2", "batch"), layer = "logcounts")
+head(expr_data)
+
+# Fetch current identity ('ident')
+ident_data <- sn_fetch_data(sn_obj, vars = "ident")
+head(ident_data)
+```
+
+This concludes the quick start guide. Explore the function documentation (`?sn_initialize_shennong_object`, `?sn_add_assay`, etc.) for more details and advanced options.

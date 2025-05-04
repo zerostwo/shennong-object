@@ -243,7 +243,7 @@ sn_log_shennong_command <- function(object, return_command = FALSE, .info = list
   call_string <- deparse(call_obj)
 
   # Capture parameters
-  p.env <- parent.frame(1)
+  p_env <- parent.frame(1)
   params <- list()
 
   # Try to evaluate visible named arguments from the call
@@ -273,7 +273,7 @@ sn_log_shennong_command <- function(object, return_command = FALSE, .info = list
     params[[k]] <- .info[[k]]
   }
 
-  cmd.assay <- .info[["assay"]] %||% params[["assay"]] %||% NA_character_
+  cmd_assay <- .info[["assay"]] %||% params[["assay"]] %||% NA_character_
 
   # Auto naming to avoid overwrite
   base_name <- command_name
@@ -290,7 +290,7 @@ sn_log_shennong_command <- function(object, return_command = FALSE, .info = list
     params = params,
     time_stamp = time_stamp,
     call_string = call_string,
-    assay_used = cmd.assay
+    assay_used = cmd_assay
   )
 
   if (isTRUE(return_command)) return(shen_cmd)

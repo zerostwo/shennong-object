@@ -14,6 +14,8 @@ Description:
   and analysis provenance tracking. Designed for compatibility with tidyverse-style 
   workflows and modern bioinformatics pipelines.
 License: MIT + file LICENSE
+URL: https://github.com/zerostwo/shennong-object
+BugReports: https://github.com/zerostwo/shennong-object/issues
 Encoding: UTF-8
 LazyData: true
 Imports: 
@@ -46,3 +48,7 @@ Collate:
     'utils.R'
 Depends: 
     R (>= 3.5)
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
