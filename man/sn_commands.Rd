@@ -19,3 +19,4 @@ sn_commands(object, command = NULL, ...)
 \description{
 Get Command History
 }
+\concept{command}

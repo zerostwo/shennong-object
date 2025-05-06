@@ -228,6 +228,7 @@ sn_initialize_shennong_object <- function(
 #' @param return_command Logical; return command object instead of storing it
 #' @param .info A named list of parameters to inject into the command log
 #' @return A Shennong object or a ShennongCommand object
+#' @concept command
 #' @export
 sn_log_shennong_command <- function(object, return_command = FALSE, .info = list()) {
   time_stamp <- Sys.time()
@@ -313,6 +314,8 @@ sn_log_shennong_command <- function(object, return_command = FALSE, .info = list
 #' @param misc List of additional metadata.
 #'
 #' @return A `ShennongReduction` object.
+#'
+#' @concept reduction
 #' @export
 sn_create_reduction <- function(
     embedding,

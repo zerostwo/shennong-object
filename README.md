@@ -1,13 +1,15 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ShennongObject
+# ShennongObject: Modern Data Structures for Multi-Omics Analysis <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 
 [![Codecov test
 coverage](https://codecov.io/gh/zerostwo/shennong-object/graph/badge.svg)](https://app.codecov.io/gh/zerostwo/shennong-object)
 [![R-CMD-check](https://github.com/zerostwo/shennong-object/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/zerostwo/shennong-object/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 The goal of `ShennongObject` is to provide an S4 class, `Shennong`,

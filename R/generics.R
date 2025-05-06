@@ -198,6 +198,7 @@ setGeneric("sn_fetch_data", function(object, vars, samples = NULL, layer = NULL,
 #' @param command Optional: Specific command name.
 #' @param ... Additional arguments.
 #' @rdname sn_commands
+#' @concept command
 #' @export
 setGeneric("sn_commands", function(object, command = NULL, ...) standardGeneric("sn_commands"))
 
@@ -206,6 +207,7 @@ setGeneric("sn_commands", function(object, command = NULL, ...) standardGeneric(
 #' @param object A Shennong object or other class.
 #' @param ... Additional arguments.
 #' @rdname sn_reductions
+#' @concept reduction
 #' @export
 setGeneric("sn_reductions", function(object, ...) standardGeneric("sn_reductions"))
 
@@ -214,6 +216,7 @@ setGeneric("sn_reductions", function(object, ...) standardGeneric("sn_reductions
 #' @param assay Character name of the assay (optional).
 #' @return A character string.
 #' @rdname sn_active_reduction
+#' @concept reduction
 #' @export
 setGeneric("sn_active_reduction", function(object, assay = NULL) standardGeneric("sn_active_reduction"))
 
@@ -222,6 +225,7 @@ setGeneric("sn_active_reduction", function(object, assay = NULL) standardGeneric
 #' @param value Name of the reduction to set as active.
 #' @return The updated Shennong object.
 #' @rdname sn_active_reduction
+#' @concept reduction
 #' @export
 setGeneric("sn_active_reduction<-", function(object, value) standardGeneric("sn_active_reduction<-"))
 
@@ -230,6 +234,7 @@ setGeneric("sn_active_reduction<-", function(object, value) standardGeneric("sn_
 #' @param reduction The name of the reduction.
 #' @param ... Additional arguments.
 #' @rdname sn_embeddings
+#' @concept reduction
 #' @export
 setGeneric("sn_embeddings", function(object, reduction = NULL, ...) standardGeneric("sn_embeddings"))
 
@@ -238,6 +243,7 @@ setGeneric("sn_embeddings", function(object, reduction = NULL, ...) standardGene
 #' @param reduction The name of the reduction.
 #' @param ... Additional arguments.
 #' @rdname sn_loadings
+#' @concept reduction
 #' @export
 setGeneric("sn_loadings", function(object, reduction = NULL, ...) standardGeneric("sn_loadings"))
 
@@ -246,6 +252,7 @@ setGeneric("sn_loadings", function(object, reduction = NULL, ...) standardGeneri
 #' @param reduction The name of the reduction.
 #' @param ... Additional arguments.
 #' @rdname sn_stdev
+#' @concept reduction
 #' @export
 setGeneric("sn_stdev", function(object, reduction = NULL, ...) standardGeneric("sn_stdev"))
 

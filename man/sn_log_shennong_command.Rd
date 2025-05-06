@@ -19,3 +19,4 @@ A Shennong object or a ShennongCommand object
 \description{
 Captures the current function call and parameters for provenance tracking.
 }
+\concept{command}

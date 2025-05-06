@@ -15,3 +15,4 @@ Invisibly returns the object.
 \description{
 Displays key information for a ShennongCommand object.
 }
+\concept{command}

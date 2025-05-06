@@ -17,3 +17,4 @@ sn_reductions(object, ...)
 \description{
 Get Dimensional Reductions
 }
+\concept{reduction}

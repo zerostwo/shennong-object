@@ -22,3 +22,4 @@ for tracking operations within a Shennong object
 \item{\code{params}}{List of parameters passed to the command}
 }}
 
+\concept{command}

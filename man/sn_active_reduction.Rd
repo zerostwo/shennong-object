@@ -32,3 +32,4 @@ Get the active reduction name for a given assay
 
 Set the active reduction for an assay
 }
+\concept{reduction}

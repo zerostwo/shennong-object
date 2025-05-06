@@ -23,3 +23,4 @@ A \code{ggplot} object.
 \description{
 Allows tidy ggplot2 visualization using sample-level metadata or expression values.
 }
+\concept{plot}

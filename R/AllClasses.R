@@ -57,7 +57,7 @@ setClass("Shennong",
 #' @slot assay_used Name of assay used (or NA if not set)
 #' @slot call_string Full function call string
 #' @slot params List of parameters passed to the command
-#'
+#' @concept command
 #' @exportClass ShennongCommand
 setClass(
   Class = "ShennongCommand",
@@ -86,7 +86,7 @@ setClass(
 #' @slot global Logical. If TRUE, persists across assay removal.
 #' @slot key A character prefix (e.g., "PC") prepended to column names of embedding matrix.
 #' @slot misc A list of additional information.
-#'
+#' @concept reduction
 #' @exportClass ShennongReduction
 setClass(
   Class = "ShennongReduction",

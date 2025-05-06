@@ -46,6 +46,7 @@ setMethod("show", "Shennong", function(object) {
 #' @return Invisibly returns the object.
 #' @export
 #' @rdname show.ShennongCommand
+#' @concept command
 #' @aliases show,ShennongCommand-method
 setMethod(
   f = "show", "ShennongCommand", function(object) {

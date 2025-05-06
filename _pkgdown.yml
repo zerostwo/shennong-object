@@ -1,11 +1,16 @@
-url: ~
+url: https://songqi.org/shennong-object
+
+authors:
+  Songqi Duan:
+    href: https://songqi.org
+
+destination: docs
+
 template:
   bootstrap: 5
-
-navbar:
-  structure:
-    left:
-      - articles
+  includes:
+    in_header:
+      <script defer src="https://umami.catplot.org/script.js" data-website-id="f882249b-4b3c-49a9-baf1-c1d2060215bb"></script>
 
 articles:
   - title: "Quick Start Guide"
@@ -48,25 +53,17 @@ reference:
   - title: "Dimensionality Reduction"
     desc: "Class and functions related to dimensionality reduction results."
     contents:
-      - ShennongReduction-class
-      - sn_create_reduction
-      - sn_embeddings
-      - sn_loadings
-      - sn_stdev
-      - show,ShennongReduction-method
+      - has_concept("reduction")
 
   - title: "Plotting"
     desc: "Functions for visualizing Shennong objects."
-    contents:
-      - ggplot.Shennong
+  - contents:
+    - has_concept("plot")
 
   - title: "Command Log"
     desc: "Class and functions for tracking computational history."
-    contents:
-      - ShennongCommand-class
-      - sn_commands
-      - sn_log_shennong_command
-      - show,ShennongCommand-method
+  - contents:
+    - has_concept("command")
 
   - title: "Generic Methods & Utilities"
     desc: "Implementations of standard generics and other utility functions."

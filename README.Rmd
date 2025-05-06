@@ -17,11 +17,12 @@ library(Matrix) # For sparse matrix example
 set.seed(717) # for reproducibility
 ```
 
-# ShennongObject
+# ShennongObject: Modern Data Structures for Multi-Omics Analysis <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/zerostwo/shennong-object/graph/badge.svg)](https://app.codecov.io/gh/zerostwo/shennong-object)
 [![R-CMD-check](https://github.com/zerostwo/shennong-object/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/zerostwo/shennong-object/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 The goal of `ShennongObject` is to provide an S4 class, `Shennong`, designed for storing and analyzing multi-modal single-cell and bulk omics data. It builds upon the `MultiAssayExperiment` framework, offering a structured way to manage multiple assays (e.g., RNA, ATAC), data layers within assays (e.g., counts, normalized data, scaled data), dimensional reductions (e.g., PCA, UMAP), sample metadata, and analysis provenance.

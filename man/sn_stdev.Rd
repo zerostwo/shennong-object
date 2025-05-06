@@ -23,3 +23,4 @@ sn_stdev(object, reduction = NULL, ...)
 \description{
 Get Standard Deviations
 }
+\concept{reduction}

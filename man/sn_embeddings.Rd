@@ -23,3 +23,4 @@ sn_embeddings(object, reduction = NULL, ...)
 \description{
 Get Embeddings
 }
+\concept{reduction}

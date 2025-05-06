@@ -6,6 +6,8 @@
 \alias{ShennongObject-package}
 \title{ShennongObject: Modern Data Structures for Multi-Omics Analysis}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Provides a tidy, extensible, and modular S4 data infrastructure for organizing and analyzing multi-omics and single-cell datasets in R. The ShennongObject class extends MultiAssayExperiment to support streamlined integration of assays, flexible metadata management, dimensionality reductions, visualization tools, and analysis provenance tracking. Designed for compatibility with tidyverse-style workflows and modern bioinformatics pipelines.
 }
 \seealso{

@@ -23,3 +23,4 @@ sn_loadings(object, reduction = NULL, ...)
 \description{
 Get Feature Loadings
 }
+\concept{reduction}

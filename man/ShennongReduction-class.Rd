@@ -35,3 +35,4 @@ a naming key, and metadata.
 \item{\code{misc}}{A list of additional information.}
 }}
 
+\concept{reduction}

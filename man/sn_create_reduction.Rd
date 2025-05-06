@@ -35,3 +35,4 @@ A `ShennongReduction` object.
 \description{
 Create a dimensional reduction object for Shennong
 }
+\concept{reduction}

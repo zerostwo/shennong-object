@@ -11,6 +11,7 @@
 #' @return A \code{ggplot} object.
 #' @importFrom ggplot2 ggplot aes
 #' @method ggplot Shennong
+#' @concept plot
 #' @export
 ggplot.Shennong <- function(data, mapping = aes(), ..., environment = parent.frame(), vars = NULL) {
   # Try to automatically detect variables used in aes mapping
