@@ -6,6 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Modern Data Structures for Multi-Omics Analysis • ShennongObject</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -13,6 +18,8 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Modern Data Structures for Multi-Omics Analysis">
 <meta name="description" content="Provides a tidy, extensible, and modular S4 data infrastructure for organizing and analyzing multi-omics and single-cell datasets in R. The ShennongObject class extends MultiAssayExperiment to support streamlined integration of assays, flexible metadata management, dimensionality reductions, visualization tools, and analysis provenance tracking. Designed for compatibility with tidyverse-style workflows and modern bioinformatics pipelines.">
 <meta property="og:description" content="Provides a tidy, extensible, and modular S4 data infrastructure for organizing and analyzing multi-omics and single-cell datasets in R. The ShennongObject class extends MultiAssayExperiment to support streamlined integration of assays, flexible metadata management, dimensionality reductions, visualization tools, and analysis provenance tracking. Designed for compatibility with tidyverse-style workflows and modern bioinformatics pipelines.">
+<meta property="og:image" content="https://songqi.org/shennong-object/logo.png">
+<script defer src="https://umami.catplot.org/script.js" data-website-id="f882249b-4b3c-49a9-baf1-c1d2060215bb"></script>
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -31,6 +38,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="articles/index.html">Articles</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -46,8 +54,10 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="shennongobject">ShennongObject<a class="anchor" aria-label="anchor" href="#shennongobject"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="shennongobject-modern-data-structures-for-multi-omics-analysis-">ShennongObject: Modern Data Structures for Multi-Omics Analysis <a class="anchor" aria-label="anchor" href="#shennongobject-modern-data-structures-for-multi-omics-analysis-"></a>
+</h1>
+</div>
 <!-- badges: start -->
 
 <p>The goal of <code>ShennongObject</code> is to provide an S4 class, <code>Shennong</code>, designed for storing and analyzing multi-modal single-cell and bulk omics data. It builds upon the <code>MultiAssayExperiment</code> framework, offering a structured way to manage multiple assays (e.g., RNA, ATAC), data layers within assays (e.g., counts, normalized data, scaled data), dimensional reductions (e.g., PCA, UMAP), sample metadata, and analysis provenance.</p>
@@ -160,7 +170,8 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Songqi Duan <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0822-5883" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>
+<a href="https://songqi.org" class="external-link">Songqi Duan</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0822-5883" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 
@@ -169,6 +180,7 @@
 <ul class="list-unstyled">
 <li><a href="https://app.codecov.io/gh/zerostwo/shennong-object" class="external-link"><img src="https://codecov.io/gh/zerostwo/shennong-object/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://github.com/zerostwo/shennong-object/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/zerostwo/shennong-object/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 </ul>
 </div>
 
@@ -177,7 +189,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Songqi Duan.</p>
+  <p>Developed by <a href="https://songqi.org" class="external-link">Songqi Duan</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
